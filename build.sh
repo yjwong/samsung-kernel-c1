@@ -35,13 +35,13 @@ build ()
     mkdir -p "$target_dir/usr"
     cp "$KERNEL_DIR/usr/"*.list "$target_dir/usr"
     sed "s|usr/|$KERNEL_DIR/usr/|g" -i "$target_dir/usr/"*.list
-    [ x = "x$NO_DEFCONFIG" ] && mka -C "$KERNEL_DIR" O="$target_dir" c1_${target}_defconfig HOSTCC="$CCACHE gcc"
+    [ x = "x$NO_DEFCONFIG" ] && make -C "$KERNEL_DIR" O="$target_dir" c1_${target}_defconfig HOSTCC="$CCACHE gcc"
     if [ x = "x$NO_BUILD" ] ; then
-        mka -C "$KERNEL_DIR" O="$target_dir" HOSTCC="$CCACHE gcc" CROSS_COMPILE="$CCACHE $CROSS_PREFIX" modules
-        mka -C "$KERNEL_DIR" O="$target_dir" HOSTCC="$CCACHE gcc" CROSS_COMPILE="$CCACHE $CROSS_PREFIX" zImage
+        make -C "$KERNEL_DIR" O="$target_dir" HOSTCC="$CCACHE gcc" CROSS_COMPILE="$CCACHE $CROSS_PREFIX" modules
+        make -C "$KERNEL_DIR" O="$target_dir" HOSTCC="$CCACHE gcc" CROSS_COMPILE="$CCACHE $CROSS_PREFIX" zImage
         cp "$target_dir"/arch/arm/boot/zImage $ANDROID_BUILD_TOP/device/samsung/$target/kernel
         for module in "${MODULES[@]}" ; do
-            cp "$target_dir/$module" $ANDROID_BUILD_TOP/device/samsung/$target
+            cp "$target_dir/$module" $ANDROID_BUILD_TOP/device/samsung/$target/modules
         done
     fi
 }
